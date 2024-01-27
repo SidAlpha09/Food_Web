@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
-import { Footer } from "../components/Footer";
+// import Navbar from "../components/Navbar";
+// import { Footer } from "../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -30,6 +30,9 @@ const Login = () => {
       alert("Enter Valid Credentials");
     }
     if (json.success) {
+      //using local storage to store the authtoken is the jwt token in the local machine
+      localStorage.setItem("authToken",json.authToken)
+      console.log(localStorage.getItem("authToken"))
       navigate('/');
     }
   };
@@ -78,7 +81,7 @@ const Login = () => {
           <button type="submit" className="btn btn-success m-3">
             Submit
           </button>
-          <Link to="/createuser" className="m-3 btn btn-danger">
+          <Link to="/createuser" className="btn btn-danger">
             Sign Up
           </Link>
         </form>

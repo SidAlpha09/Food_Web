@@ -1,20 +1,25 @@
 import React from "react";
 
-const Card = () => {
+const Card = (props) => {
+
+  let options=props.options;
+  let priceOptions=Object.keys(options)
+
   return (
     <div>
       <div
-        className="card m-3 "
+        className="card mt-3 "
         style={{ width: " 18rem", maxHeight: "360px" }}
       >
         <img
-          src="https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-          className="card-img-top"
+          src={props.imgSrc}
+          className="card-img-top "
           alt="..."
+          style={{height:'200px',objectFit:'fill'}}
         />
         <div className="card-body">
-          <h5 className="card-title">Card title</h5>
-          <p className="card-text">Some product</p>
+          <h5 className="card-title">{props.foodName}</h5>
+          
           <div className="container w-100 ">
             <select className="m-2 h-100  bg-primary rounded">
               {/* using {} will be used to write js code and {} type of line denotes a js code */}
@@ -29,8 +34,13 @@ const Card = () => {
             </select>
 
             <select className="m-2 h-100  bg-primary rounded">
-              <option value="Half">Half</option>
-              <option value="Full">Full</option>
+              {
+                priceOptions.map((data)=>{
+                  return(
+                    <option key={data} value={data}>{data}</option>
+                  )
+                })
+              }
             </select>
 
             <div className="d-inline h-100 fs-7">Total Price</div>

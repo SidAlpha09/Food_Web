@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
+
+//this jwt secrete should be inside .env file
+//have to send it to the env section
+const jwtSecret = "ThisIsTheJwtSecretWhichIHaveToSendToTheEnvFile";
+
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 //using routes to create endpoints to perform CRUD
 
 //-----for creating a user-----
@@ -21,10 +29,13 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
+    const salt = await bcrypt.genSalt(10);
+    let secPassword = await bcrypt.hash(req.body.password, salt);
+
     try {
       await User.create({
         name: req.body.name, //req.body.name taking input from the body
-        password: req.body.password,
+        password: secPassword,
         email: req.body.email,
         location: req.body.location,
       }).then(res.json({ success: true }));
@@ -54,11 +65,23 @@ router.post(
       if (!userdata) {
         return res.status(400).json({ errors: "Try valid credentials" });
       }
-      if (req.body.password !== userdata.password) {
+      const pwdCompare=await bcrypt.compare(req.body.password,userdata.password)
+      // console.log(pwdCompare)
+      if (!pwdCompare) {
         return res.status(400).json({ errors: "Try valid credentials" });
       }
 
-      return res.json({ success: true });
+      //jwt token while loging in and logic
+      //everytime you try to login a different auth token will be generated ie why it is more secure
+      
+      const data = {
+        user: {
+          id: userdata.id,
+        },
+      };
+
+      const authtoken = jwt.sign(data, jwtSecret);
+      return res.json({ success: true, authToken: authtoken });
     } catch (error) {
       console.log(error);
       res.json({ success: false });

@@ -21,7 +21,8 @@ app.get("/", (req, res) => {
 mongoDB();
 
 app.use("/api", require("./Routes/CreateUser"));
+app.use("/api", require("./Routes/DisplayData"));
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`app listening on port ${port}`);
 });
