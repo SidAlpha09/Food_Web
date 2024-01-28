@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
+import Badge from 'react-bootstrap/Badge'
+import Modal from "../Modal";
+import Cart from "../pages/Cart";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useCart,useDispatchCart } from "./ContextReducer";
 const Navbar = () => {
   const navigate=useNavigate();
+  const[cartView,setCartView]=useState(false)
+  let data = useCart();
 
   // logout funtionality on click
   const handleLogout=()=>{
@@ -63,7 +70,12 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div>
-                  <div className="btn bg-white text-primary mx-2">Cart</div>
+                  <div className="btn bg-white text-primary mx-2" onClick={()=>{setCartView(true)}}>
+                  <Badge pill bg="success">{data.length}
+                  <ShoppingCartIcon />
+                  </Badge>
+                  </div>
+                  {cartView? <Modal onClose={()=>{setCartView(false)}}><Cart/></Modal>:null}
                   <div className="btn bg-white text-danger mx-2" onClick={handleLogout}>Logout</div>
                 </div>
               )}
